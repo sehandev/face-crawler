@@ -68,9 +68,9 @@ def crawl_google_image(
 
         img_element_list = list(
             driver.find_elements(By.CSS_SELECTOR, "img.rg_i.Q4LuWd")
-        )
+        )[count["success"] :]
 
-    for img in img_element_list[count["success"] :]:
+    for img in img_element_list:
         if count["success"] >= limit:
             break
 
@@ -99,7 +99,7 @@ def crawl_google_image(
             except Exception as e:
                 print(f"ERROR [{query}] {count['fail']:03d} - {image_src}")
                 print(e)
-                count['fail'] += 1
+                count["fail"] += 1
 
 
 if __name__ == "__main__":
