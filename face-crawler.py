@@ -70,8 +70,10 @@ def crawl_google_image(
             driver.find_elements(By.CSS_SELECTOR, "img.rg_i.Q4LuWd")
         )
 
-    image_src_list = list()
-    for img in img_element_list[count["success"] + 1 : large_limit]:
+    for img in img_element_list[count["success"] :]:
+        if count["success"] >= limit:
+            break
+
         try:
             img.click()
         except:
@@ -80,25 +82,24 @@ def crawl_google_image(
 
         sleep(0.5)
 
-        image_src_list.append(
-            driver.find_element(
-                By.XPATH,
-                '//*[@id="Sva75c"]/div[2]/div/div[2]/div[2]/div[2]/c-wiz/div[2]/div[1]/div[1]/div[2]/div/a/img',
-            ).get_attribute("src")
-        )
+        image_src = driver.find_element(
+            By.XPATH,
+            '//*[@id="Sva75c"]/div[2]/div/div[2]/div[2]/div[2]/c-wiz/div[2]/div[1]/div[1]/div[2]/div/a/img',
+        ).get_attribute("src")
+        image_src = image_src.split("?")[0]
+        ext = image_src.split(".")[-1]
 
-    for link in image_src_list:
-        try:
-            link = link.split("?")[0]
-            ext = link.split(".")[-1]
-            if ext.lower() in ACCEPTABLE_EXT:
-                image_path = download_dir / f"{count['success']}.{ext}"
-                image_path = str(image_path.absolute())
-                urllib.request.urlretrieve(link, image_path)
+        if ext.lower() in ACCEPTABLE_EXT:
+            image_path = download_dir / f"{count['success']:03d}.{ext}"
+            image_path = str(image_path.absolute())
+
+            try:
+                urllib.request.urlretrieve(image_src, image_path)
                 count["success"] += 1
-        except Exception as e:
-            print(f"ERROR [{query}] {count['fail']:03d} - {link}")
-            print(e)
+            except Exception as e:
+                print(f"ERROR [{query}] {count['fail']:03d} - {image_src}")
+                print(e)
+                count['fail'] += 1
 
 
 if __name__ == "__main__":
