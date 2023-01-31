@@ -90,8 +90,7 @@ def crawl_google_image(
             By.XPATH,
             '//*[@id="Sva75c"]/div[2]/div/div[2]/div[2]/div[2]/c-wiz/div[2]/div[1]/div[1]/div[2]/div/a/img',
         ).get_attribute("src")
-        image_src = image_src.split("?")[0]
-        ext = image_src.split(".")[-1]
+        ext = image_src.split("?")[0].split(".")[-1]
 
         if ext.lower() in ACCEPTABLE_EXT:
             image_path = download_dir / f"{count['success']:03d}.{ext}"
@@ -118,7 +117,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"ERROR {idx} - {e}")
 
-    actor_list = list(set(cast_list))
+    actor_list = sorted(list(set(cast_list)))
 
     for actor_name in tqdm(actor_list):
         crawl_google_image(
