@@ -1,7 +1,10 @@
+import ast
 from pathlib import Path
-import urllib.request
-from selenium import webdriver
 from time import sleep
+from tqdm.auto import tqdm
+import urllib.request
+import pandas as pd
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
@@ -9,6 +12,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 ACCEPTABLE_EXT = ["jpg", "jpeg", "png", "webp"]
 CHROMEDRIVER_PATH = "/usr/lib/chromium-browser/chromedriver"
+TMP_PATH = "/data/dataset/CondensedMovies/metadata/casts.csv"
 
 
 def crawl_google_image(
@@ -103,8 +107,22 @@ def crawl_google_image(
 
 
 if __name__ == "__main__":
-    crawl_google_image(
-        query="Hugh Jackman",
-        limit=10,
-        download_dir="/data/imdb-actor-image",
-    )
+    cast_df = pd.read_csv(TMP_PATH)
+
+    cast_list = list()
+    for idx, row in cast_df.iterrows():
+        # row: imdbid, cast
+        try:
+            parsed_json = ast.literal_eval(row[1])
+            cast_list.extend(list(parsed_json.keys()))
+        except Exception as e:
+            print(f"ERROR {idx} - {e}")
+
+    actor_list = list(set(cast_list))
+
+    for actor_name in tqdm(actor_list):
+        crawl_google_image(
+            query=actor_name,
+            limit=10,
+            download_dir="/data/imdb-actor-image",
+        )
