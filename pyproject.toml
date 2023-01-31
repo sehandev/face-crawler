@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "face-crawler"
+version = "0.1.0"
+description = ""
+authors = ["Sungdon Kim <sehandev@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+selenium = "^4.8.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = {version = "^23.1a1", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
