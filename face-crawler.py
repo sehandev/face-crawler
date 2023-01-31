@@ -20,8 +20,6 @@ def crawl_google_image(
     limit: int = 10,
     download_dir: str = "/data/imdb-actor-image",
 ):
-    large_limit = int(limit * 1.5)
-
     download_dir = Path(download_dir) / query
     download_dir.mkdir(parents=True, exist_ok=True)
 
@@ -32,6 +30,8 @@ def crawl_google_image(
 
     if count["success"] >= limit:
         return
+
+    large_limit = count["success"] + int(limit * 1.5)
 
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
@@ -90,9 +90,9 @@ def crawl_google_image(
             By.XPATH,
             '//*[@id="Sva75c"]/div[2]/div/div[2]/div[2]/div[2]/c-wiz/div[2]/div[1]/div[1]/div[2]/div/a/img',
         ).get_attribute("src")
-        ext = image_src.split("?")[0].split(".")[-1]
+        ext = image_src.split("?")[0].split(".")[-1].lower()
 
-        if ext.lower() in ACCEPTABLE_EXT:
+        if ext in ACCEPTABLE_EXT:
             image_path = download_dir / f"{count['success']:03d}.{ext}"
             image_path = str(image_path.absolute())
 
