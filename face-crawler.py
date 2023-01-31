@@ -4,6 +4,8 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 ACCEPTABLE_EXT = ["jpg", "jpeg", "png", "webp"]
 CHROMEDRIVER_PATH = "/usr/lib/chromium-browser/chromedriver"
@@ -38,7 +40,7 @@ def crawl_google_image(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"
     )
     driver = webdriver.Chrome(
-        executable_path=CHROMEDRIVER_PATH,
+        service=Service(ChromeDriverManager().install()),
         options=chrome_options,
     )
 
