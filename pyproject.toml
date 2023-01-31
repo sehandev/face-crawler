@@ -5,9 +5,10 @@ description = ""
 authors = ["Sungdon Kim <sehandev@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 selenium = "^4.8.0"
 webdriver-manager = "^3.8.5"
+pandas = "^1.5.3"
 
 
 [tool.poetry.group.dev.dependencies]
