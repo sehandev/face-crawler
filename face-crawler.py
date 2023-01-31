@@ -17,25 +17,22 @@ def crawl_google_image(
     download_dir: str = "/data/imdb-actor-image",
 ):
     large_limit = int(limit * 1.5)
-    count = {
-        "success": -1,
-        "fail": 0,
-    }
 
     download_dir = Path(download_dir) / query
     download_dir.mkdir(parents=True, exist_ok=True)
 
-    for path in download_dir.glob("*.*"):
-        if path.is_file():
-            idx = int(path.stem)
-            count["success"] = max(count["success"], idx)
+    count = {
+        "success": len(list(download_dir.glob("*.*"))),
+        "fail": 0,
+    }
 
     if count["success"] >= limit:
         return
 
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("headless")
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--remote-debugging-port=9222")
     chrome_options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"
     )
@@ -74,10 +71,7 @@ def crawl_google_image(
         )
 
     image_src_list = list()
-    for i, img in enumerate(img_element_list[count["success"] + 1 :]):
-        if i > large_limit:
-            break
-
+    for img in img_element_list[count["success"] + 1 : large_limit]:
         try:
             img.click()
         except:
