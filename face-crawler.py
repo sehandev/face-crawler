@@ -92,9 +92,9 @@ def crawl_google_image(
             link = link.split("?")[0]
             ext = link.split(".")[-1]
             if ext.lower() in ACCEPTABLE_EXT:
-                saveUrl = download_dir / f"{count['success']}.{ext}"
-                saveUrl = str(saveUrl.absolute())
-                urllib.request.urlretrieve(link, saveUrl)
+                image_path = download_dir / f"{count['success']}.{ext}"
+                image_path = str(image_path.absolute())
+                urllib.request.urlretrieve(link, image_path)
                 count["success"] += 1
         except Exception as e:
             print(f"ERROR [{query}] {count['fail']:03d} - {link}")
