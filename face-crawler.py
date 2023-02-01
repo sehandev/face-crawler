@@ -44,12 +44,12 @@ def crawl_google_image(
         WebDriverWait(driver, 1).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "img.rg_i.Q4LuWd"))
         )
-    except TimeoutError:
+    except:
         try:
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "img.rg_i.Q4LuWd"))
             )
-        except TimeoutError:
+        except:
             return
 
     img_element_list = list(driver.find_elements(By.CSS_SELECTOR, "img.rg_i.Q4LuWd"))
