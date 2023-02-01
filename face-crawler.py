@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
+import typer
 from webdriver_manager.chrome import ChromeDriverManager
 
 ACCEPTABLE_EXT = ["jpg", "jpeg", "png", "webp"]
@@ -105,7 +106,7 @@ def crawl_google_image(
                 count["fail"] += 1
 
 
-if __name__ == "__main__":
+def main(start: int = 0, end: int = 100):
     cast_df = pd.read_csv(TMP_PATH)
 
     cast_list = list()
@@ -118,6 +119,7 @@ if __name__ == "__main__":
             print(f"ERROR {idx} - {e}")
 
     actor_list = sorted(list(set(cast_list)))
+    actor_list = actor_list[start:end]
 
     for actor_name in tqdm(actor_list):
         crawl_google_image(
@@ -125,3 +127,7 @@ if __name__ == "__main__":
             limit=10,
             download_dir="/data/imdb-actor-image",
         )
+
+
+if __name__ == "__main__":
+    typer.run(main)
